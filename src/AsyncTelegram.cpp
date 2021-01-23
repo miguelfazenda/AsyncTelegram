@@ -545,11 +545,22 @@ void AsyncTelegram::sendMessage(const TBMessage &msg, const char* message, Reply
 
 
 void AsyncTelegram::sendToUser(const int32_t userid, String &message, String keyboard) {
-    TBMessage msg;
-    msg.sender.id = userid;
-    return sendMessage(msg, message.c_str(), "");
+    return sendToUser(userid, message, keyboard);
 }
 
+void AsyncTelegram::sendToUser(const int32_t userid, const char* message, String keyboard) {
+    TBMessage msg;
+    msg.sender.id = userid;
+    return sendMessage(msg, message, keyboard);
+}
+
+void AsyncTelegram::sendToUser(const int32_t userid, const char* message, InlineKeyboard &keyboard) {
+    return sendToUser(userid, message, keyboard.getJSON());
+}
+
+void AsyncTelegram::sendToUser(const int32_t userid, const char* message, ReplyKeyboard &keyboard) {
+    return sendToUser(userid, message, keyboard.getJSON());
+}
 
 bool AsyncTelegram::sendPhotoByFile(const uint32_t& chat_id, const String& fileName, fs::FS& fs) {
     return sendMultipartFormData("sendPhoto", chat_id, fileName, "image/jpeg", "photo", fs );
